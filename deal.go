@@ -1,6 +1,6 @@
 package todo
 
-type Request struct {
+type Deal struct {
 	Id           int      `json:"id" db:"id"`
 	Purpose      string   `json:"purpose" db:"purpose"`
 	Description  string   `json:"description" db:"description"`
