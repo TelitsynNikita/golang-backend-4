@@ -1,30 +1,159 @@
 package handler
 
 import (
-	"fmt"
+	todo "github.com/TelitsynNikita"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
 
 func (h *Handler) getAllNewDeals(c *gin.Context) {
-	fmt.Println("getAllNewDeals")
+	deals, err := h.services.GetAllNew()
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, deals)
+}
+
+func (h *Handler) getOwnDeals(c *gin.Context) {
+	var input todo.AllOwnDeal
+	if err := c.BindJSON(&input); err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	userId, ok := c.Get(userCtxId)
+	if !ok {
+		newErrorMessage(c, http.StatusInternalServerError, "user id not found")
+		return
+	}
+
+	userRole, ok := c.Get(userCtxRole)
+	if !ok {
+		newErrorMessage(c, http.StatusInternalServerError, "user id not found")
+		return
+	}
+
+	deals, err := h.services.GetAllOwnDeals(userId.(int), userRole.(string), input.Status)
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, deals)
 }
 
 func (h *Handler) getOneDeal(c *gin.Context) {
-	fmt.Println("getOneDeal")
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	deal, err := h.services.GetOneDealById(id)
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, deal)
 }
 
 func (h *Handler) createOneDeal(c *gin.Context) {
-	fmt.Println("createOneDeal")
+	id, ok := c.Get(userCtxId)
+	if !ok {
+		newErrorMessage(c, http.StatusInternalServerError, "user id not found")
+		return
+	}
+
+	var input todo.Deal
+	if err := c.BindJSON(&input); err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	userId, err := h.services.Create(id.(int), input)
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"id": userId,
+	})
 }
 
-func (h *Handler) deleteOneDeal(c *gin.Context) {
-	fmt.Println("deleteOneDeal")
+func (h *Handler) deleteDeal(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = h.services.Delete(id)
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Успешно удалено",
+	})
 }
 
-func (h *Handler) updateOneDeal(c *gin.Context) {
-	fmt.Println("updateOneDeal")
+func (h *Handler) updateDealStatus(c *gin.Context) {
+	var input []todo.UpdateDealStatus
+	if err := c.BindJSON(&input); err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	for _, deal := range input {
+		err := h.services.UpdateStatus(deal.Status, deal.Id)
+		if err != nil {
+			newErrorMessage(c, http.StatusBadRequest, err.Error())
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Успешно обновлено",
+	})
 }
 
-func (h *Handler) updateSomeDeals(c *gin.Context) {
-	fmt.Println("updateSomeDeals")
+func (h *Handler) updateBookkeeperId(c *gin.Context) {
+	userId, ok := c.Get(userCtxId)
+	if !ok {
+		newErrorMessage(c, http.StatusInternalServerError, "user id not found")
+		return
+	}
+
+	userRole, ok := c.Get(userCtxRole)
+	if !ok {
+		newErrorMessage(c, http.StatusInternalServerError, "user id not found")
+		return
+	}
+
+	if userRole != "BOOKKEEPER" {
+		newErrorMessage(c, http.StatusInternalServerError, "no access")
+		return
+	}
+
+	var input todo.UpdateDealBookkeeperId
+	if err := c.BindJSON(&input); err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err := h.services.UpdateDealBookkeeperId(userId.(int), input.RequestId)
+	if err != nil {
+		newErrorMessage(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Успешно обновлено",
+	})
 }

@@ -25,16 +25,17 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-up", h.signUp)
 	}
 
-	api := router.Group("/api")
+	api := router.Group("/api", h.userIdentity)
 	{
 		deals := api.Group("/deals")
 		{
 			deals.GET("/", h.getAllNewDeals)
+			deals.POST("/get-own", h.getOwnDeals)
 			deals.GET("/:id", h.getOneDeal)
 			deals.POST("/", h.createOneDeal)
-			deals.DELETE("", h.deleteOneDeal)
-			deals.PATCH("/", h.updateOneDeal)
-			deals.PATCH("/change-deals", h.updateSomeDeals)
+			deals.DELETE("/:id", h.deleteDeal)
+			deals.PATCH("/", h.updateDealStatus)
+			deals.PATCH("/update-bookkeeper-id", h.updateBookkeeperId)
 		}
 	}
 

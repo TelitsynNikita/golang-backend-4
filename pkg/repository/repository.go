@@ -10,7 +10,15 @@ type Authorization interface {
 	GetUser(user todo.User) (todo.User, error)
 }
 
-type Deals interface{}
+type Deals interface {
+	Create(userId int, deal todo.Deal) (int, error)
+	GetAllNew() ([]todo.AllNewDeals, error)
+	GetAllOwnDeals(id int, role string, status string) ([]todo.AllNewDeals, error)
+	GetOneDealById(id int) (todo.OneDeal, error)
+	Delete(id int) error
+	UpdateStatus(status string, id int) error
+	UpdateDealBookkeeperId(userId int, requestId int) error
+}
 
 type Repository struct {
 	Authorization
@@ -20,5 +28,6 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		Deals:         newDealPostgres(db),
 	}
 }
