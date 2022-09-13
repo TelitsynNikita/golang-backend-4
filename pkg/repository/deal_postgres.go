@@ -27,7 +27,7 @@ func (r *DealPostgres) Create(userId int, deal todo.Deal) (int, error) {
 
 func (r *DealPostgres) GetAllNew() ([]todo.AllNewDeals, error) {
 	var deals []todo.AllNewDeals
-	query := fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.created_at, ul.full_name FROM %s tl JOIN %s ul on tl.user_id = ul.id WHERE tl.status='NEW'",
+	query := fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.user_id, tl.created_at, ul.full_name FROM %s tl JOIN %s ul on tl.user_id = ul.id WHERE tl.status='NEW'",
 		dealsTable, usersTable)
 	err := r.db.Select(&deals, query)
 
