@@ -18,6 +18,7 @@ type AllNewDeals struct {
 	Amount       float64 `json:"amount" db:"amount"`
 	FullName     string  `json:"full_name" db:"full_name"`
 	BookkeeperId int     `json:"bookkeeper_id" db:"bookkeeper_id"`
+	CreatedAt    string  `json:"created_at" db:"created_at"`
 }
 
 type AllOwnDeal struct {
