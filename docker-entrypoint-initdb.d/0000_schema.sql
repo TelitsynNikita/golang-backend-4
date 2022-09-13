@@ -13,7 +13,7 @@ create table deals
     purpose varchar(255) not null,
     description varchar(255),
     amount integer not null,
-    status varchar(255) default 'NEW' not null,
+    status varchar(255) default 'NEW',
     user_id integer not null references users (id) on delete cascade,
     bookkeeper_id integer  default 0,
     created_at    timestamp    default now()
