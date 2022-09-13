@@ -16,8 +16,8 @@ func newDealPostgres(db *sqlx.DB) *DealPostgres {
 
 func (r *DealPostgres) Create(userId int, deal todo.Deal) (int, error) {
 	var id int
-	createRequestQuery := fmt.Sprintf("INSERT INTO %s (purpose, description, amount, user_id) values ($1, $2, $3, $4) RETURNING id", dealsTable)
-	row := r.db.QueryRow(createRequestQuery, deal.Purpose, deal.Description, deal.Amount, userId)
+	createRequestQuery := fmt.Sprintf("INSERT INTO %s (purpose, description, amount, user_id, count, product_link) values ($1, $2, $3, $4, $5, $6) RETURNING id", dealsTable)
+	row := r.db.QueryRow(createRequestQuery, deal.Purpose, deal.Description, deal.Amount, userId, deal.Count, deal.ProductLink)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
 	}
@@ -27,7 +27,7 @@ func (r *DealPostgres) Create(userId int, deal todo.Deal) (int, error) {
 
 func (r *DealPostgres) GetAllNew() ([]todo.AllNewDeals, error) {
 	var deals []todo.AllNewDeals
-	query := fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.user_id, tl.created_at, ul.full_name FROM %s tl JOIN %s ul on tl.user_id = ul.id WHERE tl.status='NEW'",
+	query := fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.user_id, tl.created_at, tl.count, ul.full_name FROM %s tl JOIN %s ul on tl.user_id = ul.id WHERE tl.status='NEW'",
 		dealsTable, usersTable)
 	err := r.db.Select(&deals, query)
 
@@ -36,7 +36,7 @@ func (r *DealPostgres) GetAllNew() ([]todo.AllNewDeals, error) {
 
 func (r *DealPostgres) GetOneDealById(dealId int) (todo.OneDeal, error) {
 	var deal todo.OneDeal
-	query := fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.description, tl.user_id, tl.created_at, ul.full_name FROM %s tl JOIN %s ul on tl.user_id = ul.id WHERE tl.id = $1",
+	query := fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.description, tl.user_id, tl.created_at, tl.count, tl.product_link, ul.full_name FROM %s tl JOIN %s ul on tl.user_id = ul.id WHERE tl.id = $1",
 		dealsTable, usersTable)
 	err := r.db.Get(&deal, query, dealId)
 

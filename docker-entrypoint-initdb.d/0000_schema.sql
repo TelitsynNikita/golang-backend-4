@@ -12,6 +12,8 @@ create table deals
     id serial unique,
     purpose varchar(255) not null,
     description varchar(255),
+    count integer not null,
+    product_link varchar(255) not null,
     amount integer not null,
     status varchar(255) default 'NEW',
     user_id integer not null references users (id) on delete cascade,

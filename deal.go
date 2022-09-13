@@ -9,6 +9,8 @@ type Deal struct {
 	Images       []string `json:"images" db:"images"`
 	UserId       int      `json:"user_id" db:"user_id"`
 	BookkeeperId int      `json:"bookkeeper_id" db:"bookkeeper_id"`
+	ProductLink  string   `json:"product_link" db:"product_link"`
+	Count        int      `json:"count" db:"count"`
 }
 
 type AllNewDeals struct {
@@ -20,6 +22,7 @@ type AllNewDeals struct {
 	BookkeeperId int     `json:"bookkeeper_id" db:"bookkeeper_id"`
 	CreatedAt    string  `json:"created_at" db:"created_at"`
 	UserId       int     `json:"user_id" db:"user_id"`
+	Count        int     `json:"count" db:"count"`
 }
 
 type AllOwnDeal struct {
@@ -36,6 +39,8 @@ type OneDeal struct {
 	UserId      int      `json:"user_id" db:"user_id"`
 	FullName    string   `json:"full_name" db:"full_name"`
 	CreatedAt   string   `json:"created_at" db:"created_at"`
+	ProductLink string   `json:"product_link" db:"product_link"`
+	Count       int      `json:"count" db:"count"`
 }
 
 type UpdateDealStatus struct {
