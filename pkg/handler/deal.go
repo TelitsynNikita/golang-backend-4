@@ -68,21 +68,19 @@ func (h *Handler) createOneDeal(c *gin.Context) {
 		return
 	}
 
-	var input todo.Deal
+	var input []todo.Deal
 	if err := c.BindJSON(&input); err != nil {
 		newErrorMessage(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	userId, err := h.services.Create(id.(int), input)
-	if err != nil {
-		newErrorMessage(c, http.StatusBadRequest, err.Error())
-		return
+	for _, value := range input {
+		_, err := h.services.Create(id.(int), value)
+		if err != nil {
+			newErrorMessage(c, http.StatusBadRequest, err.Error())
+			return
+		}
 	}
-
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": userId,
-	})
 }
 
 func (h *Handler) deleteDeal(c *gin.Context) {
