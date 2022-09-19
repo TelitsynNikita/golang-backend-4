@@ -139,16 +139,18 @@ func (h *Handler) updateBookkeeperId(c *gin.Context) {
 		return
 	}
 
-	var input todo.UpdateDealBookkeeperId
+	var input []todo.UpdateDealBookkeeperId
 	if err := c.BindJSON(&input); err != nil {
 		newErrorMessage(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err := h.services.UpdateDealBookkeeperId(userId.(int), input.RequestId)
-	if err != nil {
-		newErrorMessage(c, http.StatusBadRequest, err.Error())
-		return
+	for _, value := range input {
+		err := h.services.UpdateDealBookkeeperId(userId.(int), value.RequestId)
+		if err != nil {
+			newErrorMessage(c, http.StatusBadRequest, err.Error())
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
