@@ -49,5 +49,5 @@ type UpdateDealStatus struct {
 }
 
 type UpdateDealBookkeeperId struct {
-	RequestId int `json:"request_id"`
+	DealId int `json:"deal_id"`
 }

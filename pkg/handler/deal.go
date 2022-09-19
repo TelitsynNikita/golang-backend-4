@@ -146,7 +146,7 @@ func (h *Handler) updateBookkeeperId(c *gin.Context) {
 	}
 
 	for _, value := range input {
-		err := h.services.UpdateDealBookkeeperId(userId.(int), value.RequestId)
+		err := h.services.UpdateDealBookkeeperId(userId.(int), value.DealId)
 		if err != nil {
 			newErrorMessage(c, http.StatusBadRequest, err.Error())
 			return

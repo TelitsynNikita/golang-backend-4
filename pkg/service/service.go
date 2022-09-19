@@ -18,7 +18,7 @@ type Deals interface {
 	GetOneDealById(id int) (todo.OneDeal, error)
 	Delete(id int) error
 	UpdateStatus(status string, id int) error
-	UpdateDealBookkeeperId(userId int, requestId int) error
+	UpdateDealBookkeeperId(userId int, dealId int) error
 }
 
 type Service struct {

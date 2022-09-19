@@ -57,9 +57,9 @@ func (r *DealPostgres) UpdateStatus(status string, id int) error {
 	return err
 }
 
-func (r *DealPostgres) UpdateDealBookkeeperId(userId int, requestId int) error {
+func (r *DealPostgres) UpdateDealBookkeeperId(userId int, dealId int) error {
 	query := fmt.Sprintf("UPDATE %s tl SET bookkeeper_id=$1  WHERE id=$2", dealsTable)
-	_, err := r.db.Exec(query, userId, requestId)
+	_, err := r.db.Exec(query, userId, dealId)
 
 	return err
 }
@@ -77,8 +77,6 @@ func (r *DealPostgres) GetAllOwnDeals(userId int, role string, status string) ([
 	}
 
 	err := r.db.Select(&deals, query, userId, status)
-
-	fmt.Println(deals)
 
 	return deals, err
 }

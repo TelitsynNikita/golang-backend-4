@@ -33,8 +33,8 @@ func (s *DealService) UpdateStatus(status string, id int) error {
 	return s.repo.UpdateStatus(status, id)
 }
 
-func (s *DealService) UpdateDealBookkeeperId(userId int, requestId int) error {
-	return s.repo.UpdateDealBookkeeperId(userId, requestId)
+func (s *DealService) UpdateDealBookkeeperId(userId int, dealId int) error {
+	return s.repo.UpdateDealBookkeeperId(userId, dealId)
 }
 
 func (s *DealService) GetAllOwnDeals(id int, role string, status string) ([]todo.AllNewDeals, error) {
