@@ -69,10 +69,10 @@ func (r *DealPostgres) GetAllOwnDeals(userId int, role string, status string) ([
 	var query string
 
 	if role == "BOOKKEEPER" {
-		query = fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.created_at, tl.user_id, ul.full_name FROM %s tl JOIN %s ul on tl.user_id=ul.id WHERE tl.bookkeeper_id=$1 AND tl.status=$2",
+		query = fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.created_at, tl.count, tl.user_id, ul.full_name FROM %s tl JOIN %s ul on tl.user_id=ul.id WHERE tl.bookkeeper_id=$1 AND tl.status=$2",
 			dealsTable, usersTable)
 	} else if role == "USER" {
-		query = fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.created_at, tl.user_id, ul.full_name FROM %s tl JOIN %s ul on tl.user_id=ul.id WHERE tl.user_id=$1 AND tl.status=$2",
+		query = fmt.Sprintf("SELECT tl.id, tl.purpose, tl.amount, tl.status, tl.bookkeeper_id, tl.created_at, tl.count, tl.user_id, ul.full_name FROM %s tl JOIN %s ul on tl.user_id=ul.id WHERE tl.user_id=$1 AND tl.status=$2",
 			dealsTable, usersTable)
 	}
 
