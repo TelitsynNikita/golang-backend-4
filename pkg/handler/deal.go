@@ -84,7 +84,7 @@ func (h *Handler) createOneDeal(c *gin.Context) {
 }
 
 func (h *Handler) deleteDeal(c *gin.Context) {
-	var input []todo.UpdateDealBookkeeperId
+	var input []todo.DealId
 	if err := c.BindJSON(&input); err != nil {
 		newErrorMessage(c, http.StatusBadRequest, err.Error())
 		return
@@ -141,7 +141,7 @@ func (h *Handler) updateBookkeeperId(c *gin.Context) {
 		return
 	}
 
-	var input []todo.UpdateDealBookkeeperId
+	var input []todo.DealId
 	if err := c.BindJSON(&input); err != nil {
 		newErrorMessage(c, http.StatusBadRequest, err.Error())
 		return

@@ -48,6 +48,6 @@ type UpdateDealStatus struct {
 	Status string `json:"status" db:"status"`
 }
 
-type UpdateDealBookkeeperId struct {
+type DealId struct {
 	DealId int `json:"deal_id"`
 }
