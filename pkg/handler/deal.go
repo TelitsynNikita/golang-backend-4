@@ -84,16 +84,18 @@ func (h *Handler) createOneDeal(c *gin.Context) {
 }
 
 func (h *Handler) deleteDeal(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
+	var input []todo.UpdateDealBookkeeperId
+	if err := c.BindJSON(&input); err != nil {
 		newErrorMessage(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = h.services.Delete(id)
-	if err != nil {
-		newErrorMessage(c, http.StatusBadRequest, err.Error())
-		return
+	for _, value := range input {
+		err := h.services.Delete(value.DealId)
+		if err != nil {
+			newErrorMessage(c, http.StatusBadRequest, err.Error())
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{

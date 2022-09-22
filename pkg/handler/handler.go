@@ -32,7 +32,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			deals.POST("/get-own", h.getOwnDeals)
 			deals.GET("/:id", h.getOneDeal)
 			deals.POST("/", h.createOneDeal)
-			deals.DELETE("/:id", h.deleteDeal)
+			deals.DELETE("/", h.deleteDeal)
 			deals.PATCH("/", h.updateDealStatus)
 			deals.PATCH("/update-bookkeeper-id", h.updateBookkeeperId)
 		}
